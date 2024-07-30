@@ -1,0 +1,13 @@
+{
+    "name": "m3c5s-tools",
+    "version": "1.0.0",
+
+    "author": "Matt Calkins",
+    "license": "ISC",
+    "description": "",
+
+    "bin": {
+        "m3c5s-build": "./bin/build.sh",
+        "m3c5s-push": "./bin/push.sh"
+    }
+}
