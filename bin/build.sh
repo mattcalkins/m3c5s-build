@@ -1,12 +1,21 @@
 #!/usr/bin/env sh
 
-PACKAGE_NAME=$(node -p "require('./package.json').name")
+set -e
 
-echo "Building $PACKAGE_NAME Docker image"
+if [ -z "$DOCKER_IMAGE_NAME" ]; then
+    echo "Error: DOCKER_IMAGE_NAME environment variable is not set." >&2
+    exit 1
+fi
 
-PACKAGE_VERSION_NUMBER=$(node -p "require('./package.json').version")
+if [ -z "$DOCKER_IMAGE_VERSION_NUMBER" ]; then
+    echo "Error: DOCKER_IMAGE_VERSION_NUMBER environment variable is not set." >&2
+    exit 1
+fi
+
+echo "Building $DOCKER_IMAGE_NAME Docker image"
+
 BUILD_NUMBER=$(TZ=America/Los_Angeles date "+%Y-%m-%d--%H-%M-%S")
-SEMANTIC_VERSION_NUMBER="${PACKAGE_VERSION_NUMBER}+${BUILD_NUMBER}"
+SEMANTIC_VERSION_NUMBER="${DOCKER_IMAGE_VERSION_NUMBER}+${BUILD_NUMBER}"
 DOCKER_IMAGE_TAG=$(echo "$SEMANTIC_VERSION_NUMBER" | sed 's/+/--/g')
 
 echo "  Semantic version number: $SEMANTIC_VERSION_NUMBER"
@@ -16,17 +25,11 @@ COMMAND="\
     docker build \
     --platform linux/amd64 \
     --pull \
-    --tag $PACKAGE_NAME:$PACKAGE_VERSION_NUMBER \
-    --tag $PACKAGE_NAME:$DOCKER_IMAGE_TAG \
-    --tag $PACKAGE_NAME:latest \
+    --tag \"$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_VERSION_NUMBER\" \
+    --tag \"$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG\" \
+    --tag \"$DOCKER_IMAGE_NAME:latest\" \
     . \
 "
 
 echo "$COMMAND\n"
-
 eval "$COMMAND"
-
-if [ $? -ne 0 ]; then
-    echo "Error: docker build failed."
-    exit 1
-fi
