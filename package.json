@@ -10,6 +10,7 @@
 
     "bin": {
         "m3c5s-build": "./bin/build.sh",
-        "m3c5s-push": "./bin/push.sh"
+        "m3c5s-push": "./bin/push.sh",
+        "m3c5s-generate-timestamp-tag": "./bin/generate-timestamp-tag.mjs"
     }
 }
