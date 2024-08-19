@@ -6,6 +6,8 @@
     "license": "ISC",
     "description": "",
 
+    "main": "src/index.mjs",
+
     "bin": {
         "m3c5s-build": "./bin/build.sh",
         "m3c5s-push": "./bin/push.sh"
