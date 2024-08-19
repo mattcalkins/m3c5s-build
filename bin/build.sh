@@ -3,26 +3,26 @@
 set -e
 
 if [ -z "$DOCKER_IMAGE_NAME" ]; then
-    echo "Error: DOCKER_IMAGE_NAME environment variable is not set." >&2
+    printf "Error: DOCKER_IMAGE_NAME environment variable is not set.\n" >&2
     exit 1
 fi
 
 if [ -z "$DOCKER_IMAGE_VERSION_NUMBER" ]; then
-    echo "Error: DOCKER_IMAGE_VERSION_NUMBER environment variable is not set." >&2
+    printf "Error: DOCKER_IMAGE_VERSION_NUMBER environment variable is not set.\n" >&2
     exit 1
 fi
 
-echo "Building $DOCKER_IMAGE_NAME Docker image"
+printf "Building %s Docker image\n" "$DOCKER_IMAGE_NAME"
 
 if [ -z "$BUILD_NUMBER" ]; then
     BUILD_NUMBER=$(TZ=America/Los_Angeles npx m3c5s-generate-timestamp-tag)
 fi
 
 SEMANTIC_VERSION_NUMBER="${DOCKER_IMAGE_VERSION_NUMBER}+${BUILD_NUMBER}"
-DOCKER_IMAGE_TAG=$(echo "$SEMANTIC_VERSION_NUMBER" | sed 's/+/--/g')
+DOCKER_IMAGE_TAG=$(printf "%s" "$SEMANTIC_VERSION_NUMBER" | sed 's/+/--/g')
 
-echo "  Semantic version number: $SEMANTIC_VERSION_NUMBER"
-echo "         Docker image tag: $DOCKER_IMAGE_TAG\n\n"
+printf "  Semantic version number: %s\n" "$SEMANTIC_VERSION_NUMBER"
+printf "         Docker image tag: %s\n\n" "$DOCKER_IMAGE_TAG"
 
 COMMAND="\
     docker build \
@@ -34,5 +34,5 @@ COMMAND="\
     . \
 "
 
-echo "$COMMAND\n"
+printf "%s\n" "$COMMAND"
 eval "$COMMAND"
