@@ -14,7 +14,10 @@ fi
 
 echo "Building $DOCKER_IMAGE_NAME Docker image"
 
-BUILD_NUMBER=$(TZ=America/Los_Angeles date "+%Y-%m-%d--%H-%M-%S")
+if [ -z "$BUILD_NUMBER" ]; then
+    BUILD_NUMBER=$(TZ=America/Los_Angeles npx m3c5s-generate-timestamp-tag)
+fi
+
 SEMANTIC_VERSION_NUMBER="${DOCKER_IMAGE_VERSION_NUMBER}+${BUILD_NUMBER}"
 DOCKER_IMAGE_TAG=$(echo "$SEMANTIC_VERSION_NUMBER" | sed 's/+/--/g')
 
